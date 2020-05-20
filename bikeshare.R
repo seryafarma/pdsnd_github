@@ -13,10 +13,12 @@ install.packages('Rmisc')
 library('ggplot2')
 library('Rmisc')
 
+# Load the csv files into dataset.
 ny = read.csv('new_york_city.csv')
 wash = read.csv('washington.csv')
 chi = read.csv('chicago.csv')
 
+# Peeking at column names.
 colnames(chi)
 
 #-----------------------------------------------------------------1
