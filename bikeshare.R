@@ -2,7 +2,6 @@
 # filname: 
 #   bikeshare.R
 # desc:
-#   Updated with review remarks from the project review.
 #   The questions and answers for the bikeshare project with
 #   using R for the udacity course:
 #   - Programming for Data Science with R Nanodegree Program
@@ -14,12 +13,10 @@ install.packages('Rmisc')
 library('ggplot2')
 library('Rmisc')
 
-# Load the csv files into dataset.
 ny = read.csv('new_york_city.csv')
 wash = read.csv('washington.csv')
 chi = read.csv('chicago.csv')
 
-# Peeking at column names.
 colnames(chi)
 
 #-----------------------------------------------------------------1
@@ -53,7 +50,6 @@ g2 <- ggplot(aes(group = 'birthyear', x = Birth.Year, color = Gender), data = su
   scale_x_continuous(limit = c(1950, 2000)) +
   facet_wrap(~Gender)
 
-# Show this in a multiple plot canvas using multiplot()
 multiplot(g1, g2, cols=1)
 
 #-----------------------------------------------------------------2
@@ -81,7 +77,6 @@ b2 <- ggplot(aes(x = Trip.Duration, fill = User.Type, color = User.Type), data =
   scale_fill_manual(name= "User Type", values = c("grey", "grey"))+
   scale_color_manual(name = "User Type", values = c("darkgreen", "darkblue"))
 
-# Show this in a multiple plot canvas using multiplot()
 multiplot(b1, b2, cols=1)
 
 # duration of bike share for daily trips (until 1 week)
