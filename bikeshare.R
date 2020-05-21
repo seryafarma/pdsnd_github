@@ -2,6 +2,7 @@
 # filname: 
 #   bikeshare.R
 # desc:
+#   Updated with review remarks from the project review.
 #   The questions and answers for the bikeshare project with
 #   using R for the udacity course:
 #   - Programming for Data Science with R Nanodegree Program
@@ -31,6 +32,16 @@ colnames(chi)
 by(chi$Birth.Year, chi$Gender, summary)
 by(ny$Birth.Year, ny$Gender, summary)
 
+draw_hist_birthyear_n_gender <- function(dataset, title) {
+  ggplot(aes(group = 'birthyear', x = Birth.Year, color = Gender), data = subset(dataset, (Gender != ''))) + geom_histogram(binwidth = 1) +
+    ggtitle(title) +
+    scale_x_continuous(limit = c(1950, 2000)) +
+    facet_wrap(~Gender)  
+}
+
+draw_hist_birthyear_n_gender(chi, 'Histogram of birth year of bikers in Chicago')
+draw_hist_birthyear_n_gender(ny, 'Histogram of birth year of bikers in New York')
+
 # Simple histogram of birth year
 g1 <- ggplot(aes(group = 'birthyear', x = Birth.Year, color = Gender), data = subset(chi, (Gender != ''))) + geom_histogram(binwidth = 1) +
   ggtitle('Histogram of birth year of bikers in chicago') +
@@ -54,14 +65,17 @@ by(wash$Trip.Duration, wash$User.Type, sum)
 # duration of bike share for short trips < 1 hour.
 b1 <- ggplot(aes(x = Trip.Duration, fill = User.Type, color = User.Type), data = subset(wash, !is.na(Trip.Duration))) +
   geom_histogram() +
+  ggtitle('Histogram of Bikeshare Users for Short trips < 1 hour') + 
   scale_x_continuous(limit = c(0, 3600), breaks=c(60,900,1800,3600),labels=c("1min","15min","30min","1hour")) +
   facet_wrap(~User.Type) +
   scale_fill_manual(name= "User Type", values = c("grey", "grey"))+
   scale_color_manual(name = "User Type", values = c("darkgreen", "darkblue"))
 
+  
 # boxplot
 b2 <- ggplot(aes(x = Trip.Duration, fill = User.Type, color = User.Type), data = subset(wash, !is.na(Trip.Duration))) +
   geom_boxplot() +
+  ggtitle('Box Plot of Bikeshare Users for Short trips < 1 hour') +
   scale_x_continuous(limit = c(0, 3600), breaks=c(60,900,1800,3600),labels=c("1min","15min","30min","1hour")) +
   facet_wrap(~User.Type) +
   scale_fill_manual(name= "User Type", values = c("grey", "grey"))+
@@ -89,10 +103,29 @@ ggplot(aes(x = Trip.Duration, fill = User.Type, color = User.Type), data = subse
 # what is the most common start station and 
 # the most common end station in new york?
 top5.end <- tail(names(sort(table(ny$End.Station))), 5)
-top5.start <- tail(names(sort(table(ny$End.Station))), 5)
+end_station_ds <- subset(ny, End.Station %in% top5.end)
+# statistical summary for the top 5 end stations
+by(end_station_ds, end_station_ds$End.Station %in% top5.end, summary)
 
-ggplot(aes(x = End.Station), 
-       data = subset(ny, End.Station %in% top5.end)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-1)
+top5.start <- tail(names(sort(table(ny$Start.Station))), 5)
+start_station_ds <- subset(ny, Start.Station %in% top5.start)
+# statistical summary for the top 5 start stations
+by(start_station_ds, start_station_ds$Start.Station %in% top5.start, summary)
 
-ggplot(aes(x = Start.Station), 
-       data = subset(ny, Start.Station %in% top5.start)) + geom_bar() + geom_text(stat='count', aes(label=..count..), vjust=-1)
+bar_plot_station <- function(subset_station, x_axis, title) {
+  bar_plot_st = NULL
+  if (x_axis == 'start') {
+    bar_plot_st = ggplot(aes(x = Start.Station), data = subset_station)
+  } else if (x_axis == 'end') {
+    bar_plot_st = ggplot(aes(x = End.Station), data = subset_station)
+  }
+  bar_plot_st +
+    geom_bar() + 
+    geom_text(stat='count', aes(label=..count..), vjust=-1) +
+    ggtitle(title)  
+}
+
+bar_plot_station(end_station_ds, 'end', 'Most common bikeshare end station in newyork')
+bar_plot_station(start_station_ds, 'start', 'Most common bikeshare start station in newyork')
+
+
