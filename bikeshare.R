@@ -2,6 +2,7 @@
 # filname: 
 #   bikeshare.R
 # desc:
+#   Updated with review remarks from the project review.
 #   The questions and answers for the bikeshare project with
 #   using R for the udacity course:
 #   - Programming for Data Science with R Nanodegree Program
